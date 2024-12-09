@@ -13,6 +13,7 @@ services:
       - HOST=0.0.0.0
       - PORT=80
       - MYSQLHOST=mysql
+      - MYSQLDB=users
       - MYSQLUSER=root
       - MYSQLPASS=example
     volumes:
