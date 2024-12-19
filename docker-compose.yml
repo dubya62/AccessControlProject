@@ -16,8 +16,9 @@ services:
       - MYSQLDB=users
       - MYSQLUSER=root
       - MYSQLPASS=example
+      - PEPPER=ef79
     volumes:
       - ./server/backend:/app/backend
       - ./server/frontend:/app/frontend
     ports:
-      - "80:80"
+      - "8001:80"
