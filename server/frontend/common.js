@@ -53,7 +53,7 @@ function login() {
             alert("Server Error");
         } else if (resp.status = 401) {
             console.log("Username or password incorrect");
-            alert("Username or passwor incorrect");
+            alert("Username or password incorrect");
         } else {
             console.log("Unknown Error");
             alert("Unknown Error");
