@@ -5,9 +5,35 @@ services:
     environment:
       - MYSQL_ROOT_PASSWORD=example
     volumes:
-      - ./sql:/docker-entrypoint-initdb.d/
+      - ./sql/user/:/docker-entrypoint-initdb.d/
+      
+  mysql-new:
+    image: mysql
+    container_name: mysql-new
+    environment:
+      - MYSQL_ROOT_PASSWORD=example
+    volumes:
+      - ./sql/data/:/docker-entrypoint-initdb.d/
+
   server:
     build: ./server
+    restart: always
+    environment:
+      - HOST=0.0.0.0
+      - PORT=80
+      - MYSQLHOST=mysql-new
+      - MYSQLDB=new_database
+      - MYSQLUSER=root
+      - MYSQLPASS=example
+    volumes:
+      - ./server/backend:/app/backend
+      - ./server/frontend:/app/frontend
+    ports:
+      - "8003:80"
+    depends_on:
+      - mysql-new
+  user-management-api:
+    build: ./server/user-management-api
     restart: always
     environment:
       - HOST=0.0.0.0
@@ -17,8 +43,11 @@ services:
       - MYSQLUSER=root
       - MYSQLPASS=example
       - PEPPER=ef79
+      - TOTP=SPURGEON_BOURNE
+      - JWTSECRET=supersecretpassword
     volumes:
-      - ./server/backend:/app/backend
-      - ./server/frontend:/app/frontend
+      - ./server/user-management-api/backend:/app/backend
     ports:
-      - "8001:80"
+      - "8004:80"
+    depends_on:
+      - mysql
