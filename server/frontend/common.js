@@ -41,9 +41,10 @@ function login() {
         password: document.getElementById("password").value
     });
 
+    console.log(`http://${parsedUrl.hostname}:8004/login`);
     fetch("http://" + parsedUrl.hostname + ":8004/login", {
         method: "POST",
-        mode: "cors",
+        //mode: "cors",
         headers: {
             "Accept": "application/json",
             "Content-Type": "application/json"

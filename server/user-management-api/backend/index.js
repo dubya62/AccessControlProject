@@ -2,6 +2,13 @@ const express = require("express");
 const mysql = require("mysql2");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const cors = require("cors");
+
+const corsOptions = {
+    origin: 'http://localhost:8003',
+    credentials: false,
+    optionSuccessStatus: 200
+}
 
 
 const TOTP = String(process.env.TOTP);
@@ -14,7 +21,17 @@ const PEPPER = String(process.env.PEPPER);
 const JWTSECRET = String(process.env.JWTSECRET); // Secret key for JWT
 
 const app = express();
+
 app.use(express.json());
+app.use(cors(corsOptions));
+
+app.use(function (req, res, next) {
+    res.header('Access-Control-Allow-Origin', "http://localhost:8003");
+    res.header('Access-Control-Allow-Headers', true);
+    res.header('Access-Control-Allow-Credentials', true);
+    res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+    next();
+});
 
 // MySQL connection setup
 let connection = mysql.createConnection({
@@ -40,6 +57,8 @@ app.post("/login", function (request, response) {
         if (results.length == 0) {
             return response.status(401).send("Unauthorized");
         }
+
+        // FIXME: ERROR IS BELOW HERE
 
         let combinedPass = results[0]["salt"] + parsedBody["password"] + PEPPER;
         bcrypt.compare(combinedPass, results[0]["password"], function(err, result) {
