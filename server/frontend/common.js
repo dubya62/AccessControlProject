@@ -15,19 +15,28 @@ function getCookie(name) {
 function query() {
     // Retrieve the JWT token from cookies
     let token = getCookie('jwtToken');
+
+    console.log(`token: ${token}`);
+
     if (!token) {
         alert('You are not logged in. Please log in first.');
         return;
     }
 
+
     fetch("http://" + parsedUrl.host + "/query", {
         method: "GET",
         headers: {
-            "Authorization": "Bearer " + token,
+            "Authorization": token,
         },
     })
-    .then((resp) => resp.json())
+    .then((resp) => {
+        console.log(resp);
+        return resp.json()
+    })
     .then((data) => {
+        console.log(`HERE 1`);
+        console.log(`data: ${data}`)
         document.getElementById("response").innerHTML = JSON.stringify(data, null, 2);
     })
     .catch((err) => {
@@ -38,19 +47,21 @@ function query() {
 function login() {
     let stringifiedBody = JSON.stringify({
         username: document.getElementById("username").value,
-        password: document.getElementById("password").value
+        password: document.getElementById("password").value,
+        totp: document.getElementById("totp").value
     });
+
+    console.log(stringifiedBody);
 
     console.log(`http://${parsedUrl.hostname}:8004/login`);
     fetch("http://" + parsedUrl.hostname + ":8004/login", {
         method: "POST",
-        //mode: "cors",
+        mode: "cors",
         headers: {
             "Accept": "application/json",
             "Content-Type": "application/json"
         },
         body: stringifiedBody
-
     })
     .then((_resp) => {
         if (_resp.status == 500) {
@@ -73,7 +84,7 @@ function login() {
         if (data && data.token) {
             // Store the JWT token in the cookie
             document.cookie = "jwtToken=" + data.token + "; path=/; secure; samesite=strict";
-            location.href = "http://" + parsedUrl.host + "/totp.html";
+            location.href = "http://" + parsedUrl.host + "/query.html";
         } else {
             console.log("No token received");
             alert("Login failed. No token received.");
@@ -85,6 +96,8 @@ function login() {
     });
 }
 
+
+/*
 function totp() {
     let stringifiedBody = JSON.stringify({
         totp: document.getElementById("totp").value
@@ -130,4 +143,5 @@ function totp() {
         alert("An error occurred. Please try again.");
     });
 }
+*/
 

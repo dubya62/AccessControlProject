@@ -25,6 +25,7 @@ services:
       - MYSQLDB=new_database
       - MYSQLUSER=root
       - MYSQLPASS=example
+      - JWTSECRET=supersecretpassword
     volumes:
       - ./server/backend:/app/backend
       - ./server/frontend:/app/frontend

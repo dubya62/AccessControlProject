@@ -1,7 +1,7 @@
 const express = require("express");
 const mysql = require("mysql2");
 const bcrypt = require("bcrypt");
-//const jwt = require("jsonwebtoken");
+const jwt = require("jsonwebtoken");
 
 const TOTP = String(process.env.TOTP);
 const PORT = String(process.env.PORT);
@@ -10,7 +10,7 @@ const MYSQLHOST = String(process.env.MYSQLHOST);
 const MYSQLUSER = String(process.env.MYSQLUSER);
 const MYSQLPASS = String(process.env.MYSQLPASS);
 const PEPPER = String(process.env.PEPPER);
-//const JWTSECRET = String(process.env.JWTSECRET);
+const JWTSECRET = String(process.env.JWTSECRET);
 
 const app = express();
 app.use(express.json());
@@ -28,8 +28,9 @@ app.use("/", express.static("frontend"));
 
 // Middleware to authenticate token
 function authenticateToken(request, response, next) {
-    const authHeader = request.headers['authorization'];
-    const token = authHeader && authHeader.split(' ')[1]; // Get token from Authorization header
+    const authHeader = request.header('Authorization');
+    const token = authHeader;
+    console.log(`AuthHeader: ${authHeader}`);
     if (!token) {
         return response.status(403).send('No token provided');
     }
@@ -46,6 +47,7 @@ function authenticateToken(request, response, next) {
 // /query route for Data API
 app.get("/query", authenticateToken, (request, response) => {
   // verify the token
+  console.log("Attempt at query");
   authenticateToken(request, response, () => {
       let SQL = "SELECT * FROM products;";
       connection.query(SQL, (error, results) => {

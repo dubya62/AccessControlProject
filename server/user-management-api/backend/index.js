@@ -4,12 +4,6 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const cors = require("cors");
 
-const corsOptions = {
-    origin: 'http://localhost:8003',
-    credentials: false,
-    optionSuccessStatus: 200
-}
-
 
 const TOTP = String(process.env.TOTP);
 const PORT = String(process.env.PORT);
@@ -23,15 +17,21 @@ const JWTSECRET = String(process.env.JWTSECRET); // Secret key for JWT
 const app = express();
 
 app.use(express.json());
-app.use(cors(corsOptions));
+app.use(cors({
+    origin: '*',
+    credentials: false,
+    optionSuccessStatus: 200
+}));
 
+/*
 app.use(function (req, res, next) {
     res.header('Access-Control-Allow-Origin', "http://localhost:8003");
-    res.header('Access-Control-Allow-Headers', true);
-    res.header('Access-Control-Allow-Credentials', true);
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    res.header('Access-Control-Allow-Credentials', false);
     res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
     next();
 });
+*/
 
 // MySQL connection setup
 let connection = mysql.createConnection({
@@ -45,12 +45,17 @@ let connection = mysql.createConnection({
 // /login route to authenticate and return a JWT token
 app.post("/login", function (request, response) {
     let parsedBody = request.body;
+    console.log(`request body: ${parsedBody}`);
     if (!parsedBody.hasOwnProperty("username")) {
+        console.log("no username provided");
         return response.status(415).send("Incomplete Request");
     }
 
+
     let SQL = "SELECT * FROM users WHERE username='" + parsedBody["username"] + "';";
     connection.query(SQL, [true], (error, results, fields) => {
+
+
         if (error) {
             return response.status(500).send("Server Error");
         }
@@ -58,10 +63,11 @@ app.post("/login", function (request, response) {
             return response.status(401).send("Unauthorized");
         }
 
-        // FIXME: ERROR IS BELOW HERE
+        console.log(results);
 
         let combinedPass = results[0]["salt"] + parsedBody["password"] + PEPPER;
         bcrypt.compare(combinedPass, results[0]["password"], function(err, result) {
+            console.log("Compared...");
             if (!result) {
                 return response.status(401).send("Unauthorized");
             }
@@ -81,6 +87,9 @@ app.post("/login", function (request, response) {
                 }
                 j++;
             }
+
+            console.log(`Given totp: ${parsedBody["totp"]}`)
+            console.log(`Computed totp: ${computedTOTP}`)
 
             if (parsedBody["totp"] !== computedTOTP) {
                 return response.status(401).send("Unauthorized");
