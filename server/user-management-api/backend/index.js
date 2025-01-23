@@ -96,7 +96,7 @@ app.post("/login", function (request, response) {
             }
 
             // Create JWT token
-            const token = jwt.sign({ username: results[0].username, email: results[0].email }, JWTSECRET, { expiresIn: '1h' });
+            const token = jwt.sign({ username: results[0].username, email: results[0].email, role: results[0].role }, JWTSECRET, { expiresIn: '1h' });
             return response.json({ token }); // Send the JWT token to the client
         });
     });
@@ -136,6 +136,29 @@ app.post("/totp", function (request, response) {
         return response.status(401).send("Unauthorized");
     }
 });
+
+app.post("/createUser", function (request, response) { 
+    console.log(request.body)
+    let {username, password} = request.body;
+
+    let query = "INSERT INTO users (username, password, role, salt, email) VALUES (?, ?, 'admin', '7ezb', 'in@example.com')";
+    let saltedPassword = "7ezb" + password + PEPPER;
+
+    bcrypt.hash(saltedPassword, 10, (err, hash) => {
+        connection.query(query, [username, hash], (error, results, fields) => {
+            console.log(`${query}`);
+            console.log(`username: ${username}`);
+            console.log(`salted: ${saltedPassword}`);
+            console.log(`hash: ${hash}`);
+            if (error){
+                console.log(error);
+                return response.status(500).send("Database error.");
+            }
+            return response.status(200).send("success?");
+        });
+    });
+});
+
 
 app.listen(PORT, HOST, () => {
     console.log(`Running on http://${HOST}:${PORT}`);

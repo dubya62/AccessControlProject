@@ -10,11 +10,20 @@ CREATE TABLE users (
     email    VARCHAR(255) NOT NULL,
     PRIMARY KEY (username)
 );
+-- "pass",
 
-INSERT INTO users (username, password, salt, email) VALUES (
+INSERT INTO users (username, password, role, salt, email) VALUES (
     'user',
     '$2a$12$wICQ28K5zjp6HBGrHA7r9.vNMeNylY9TGcOX2nJxa7yivndwydWra',
+    'user',
     '3eb7',
     'user@example.com'
 );
--- "pass",
+INSERT INTO users (username, password, salt, email) VALUES (
+    'user2',
+    '',
+    'admin',
+    '7dz2',
+    'user2@example.com'
+);
+
