@@ -36,20 +36,21 @@ function authenticateToken(request, response, next) {
     }
 
     jwt.verify(token, JWTSECRET, (err, user) => {
-      console.log(user);
+        console.log("User");
+        console.log(user);
         if (err) {
             return response.status(403).send('Invalid or expired token');
         }
         request.user = user;
-        next();
+        next(user);
     });
 }
 
 // /query route for Data API
-app.get("/query", authenticateToken, (request, response) => {
+app.get("/queryProducts", (request, response) => {
   // verify the token
   console.log("Attempt at query");
-  authenticateToken(request, response, () => {
+  authenticateToken(request, response, (token) => {
       let SQL = "SELECT * FROM products;";
       connection.query(SQL, (error, results) => {
         if (error) {
@@ -63,7 +64,47 @@ app.get("/query", authenticateToken, (request, response) => {
 
 });
 
+app.get("/queryOrders", (request, response) => {
+  // verify the token
+  console.log("Attempt at query");
+  authenticateToken(request, response, (token) => {
+      let SQL = "SELECT * FROM orders;";
+      connection.query(SQL, (error, results) => {
+        if (error) {
+          console.error(error.message);
+          response.status(500).send("Database error");
+        } else {
+          if (token["role"] == "admin"){
+            response.send(results);
+          } else {
+            response.status(403).send("Forbidden");
+          }
+        }
+      });
+  });
 
+});
+
+app.get("/queryReviews", (request, response) => {
+  // verify the token
+  console.log("Attempt at query");
+  authenticateToken(request, response, (token) => {
+      let SQL = "SELECT * FROM reviews;";
+      connection.query(SQL, (error, results) => {
+        if (error) {
+          console.error(error.message);
+          response.status(500).send("Database error");
+        } else {
+          if (token["role"] == "admin"){
+            response.send(results);
+          } else {
+            response.status(403).send("Forbidden");
+          }
+        }
+      });
+  });
+
+});
 
 /*
 // /login route for User Management API
