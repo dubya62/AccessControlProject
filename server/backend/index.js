@@ -36,6 +36,7 @@ function authenticateToken(request, response, next) {
     }
 
     jwt.verify(token, JWTSECRET, (err, user) => {
+      console.log(user);
         if (err) {
             return response.status(403).send('Invalid or expired token');
         }
