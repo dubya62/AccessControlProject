@@ -1,22 +1,33 @@
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
+    <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="shortcut icon" type="image/x-icon" href="favicon.png">
 	<link type="text/css" rel="stylesheet" href="common.css">
 	<script type="text/javascript" src="common.js"></script>
-    <head>
         <title>
             Access Control Project
         </title>
     </head>
 
     <body>
-        <div class="content">
-            <textarea id = "username" rows="2" cols="45" placeholder="Username"></textarea>
-            <textarea id = "password" rows="2" cols="45" placeholder="Password"></textarea>
-            <textarea id = "totp" rows="2" cols="45" placeholder="TOTP"></textarea>
-            <p></p>
-            <button class="button" onclick="login()">Login</button>
-		</div>
+        <div class="form-container">
+            <h2>Login...If You Dare...</h2>
+            <form>
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" placeholder="Enter your username" required>
+    
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" placeholder="Enter your password" required>
+    
+                <label for="totp">TOTP</label>
+                <input type="text" id="totp" name="totp" placeholder="Enter your TOTP">
+    
+                <button type="button" class="button" onclick="login()">Login</button>
+            </form>
+            <div class="footer">Access Control Project</div>
+        </div>
     </body>
 </html>
