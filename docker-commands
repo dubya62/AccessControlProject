@@ -1,0 +1,11 @@
+docker compose build mysql
+docker compose up -d mysql
+
+docker compose build mysql-new
+docker compose up -d mysql-new
+
+docker compose build user-management-api
+docker compose up -d user-management-api
+
+docker compose build server
+docker compose up server
