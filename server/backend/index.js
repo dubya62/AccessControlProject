@@ -106,63 +106,6 @@ app.get("/queryReviews", (request, response) => {
 
 });
 
-/*
-// /login route for User Management API
-app.post("/login", (request, response) => {
-  let { username, password } = request.body;
-  if (!username) {
-    return response.status(400).send("Incomplete Request");
-  }
-  
-  let SQL = "SELECT * FROM users WHERE username=?";
-  connection.query(SQL, [username], (error, results) => {
-    if (error) {
-      return response.status(500).send("Server Error");
-    }
-    if (results.length === 0) {
-      return response.status(401).send("Unauthorized");
-    }
-
-    let user = results[0];
-    let combinedPass = user.salt + password + PEPPER;
-
-    bcrypt.compare(combinedPass, user.password, (err, match) => {
-      if (err || !match) {
-        return response.status(401).send("Unauthorized");
-      }
-
-      // Generate JWT
-      const token = jwt.sign(
-        { email: user.email, username: user.username },
-        JWTSECRET,
-        { expiresIn: '1h' }
-      );
-      response.status(200).send({ token });
-    });
-  });
-});
-
-// /validateToken route for User Management API 
-app.post("/validateToken", (request, response) => {
-  // Extract token from Authorization header
-  const authHeader = request.headers['authorization'];
-  const token = authHeader && authHeader.split(' ')[1]; // "Bearer <token>"
-  
-  if (!token) {
-    return response.status(400).send('No token provided');
-  }
-
-  // Verify the token
-  jwt.verify(token, JWTSECRET, (err, user) => {
-    if (err) {
-      return response.status(403).send('Invalid or expired token');
-    }
-    
-    // Send back the user information if token is valid
-    response.status(200).send(user); // Send the decoded user info (username, email, etc.)
-  });
-});
-*/
 
 app.listen(PORT, HOST, () => {
   console.log(`Running on http://${HOST}:${PORT}`);

@@ -23,7 +23,6 @@ function query() {
         return;
     }
 
-
     fetch("http://" + parsedUrl.host + "/query", {
         method: "GET",
         headers: {
@@ -48,7 +47,6 @@ function login() {
     let stringifiedBody = JSON.stringify({
         username: document.getElementById("username").value,
         password: document.getElementById("password").value,
-        totp: document.getElementById("totp").value
     });
 
     console.log(stringifiedBody);
@@ -84,7 +82,7 @@ function login() {
         if (data && data.token) {
             // Store the JWT token in the cookie
             document.cookie = "jwtToken=" + data.token + "; path=/; secure; samesite=strict";
-            location.href = "http://" + parsedUrl.host + "/query.html";
+            location.href = "http://" + parsedUrl.host + "/totp.html";
         } else {
             console.log("No token received");
             alert("Login failed. No token received.");
@@ -97,7 +95,6 @@ function login() {
 }
 
 
-/*
 function totp() {
     let stringifiedBody = JSON.stringify({
         totp: document.getElementById("totp").value
@@ -110,16 +107,15 @@ function totp() {
         return;
     }
 
-    fetch("http://" + parsedUrl.host + "/totp", {
+    fetch("http://" + parsedUrl.hostname + ":8004/totp", {
         method: "POST",
+        mode: "cors",
         headers: {
             "Accept": "application/json",
             "Content-Type": "application/json",
             "Authorization": "Bearer " + token  // Add JWT token in the Authorization header
-
         },
         body: stringifiedBody
-
     })
     .then((_resp) => {
         if (_resp.status == 500) {
@@ -132,7 +128,6 @@ function totp() {
 
         } else if (_resp.status == 200) {
             location.href = "http://" + parsedUrl.host + "/query.html";
-
         } else {
             console.log("Unknown Response Status: " + _resp.status);
             alert("Unknown response from server.");
@@ -143,5 +138,4 @@ function totp() {
         alert("An error occurred. Please try again.");
     });
 }
-*/
 

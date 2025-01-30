@@ -17,21 +17,12 @@ const JWTSECRET = String(process.env.JWTSECRET); // Secret key for JWT
 const app = express();
 
 app.use(express.json());
-app.use(cors({
-    origin: '*',
-    credentials: false,
-    optionSuccessStatus: 200
-}));
 
-/*
-app.use(function (req, res, next) {
-    res.header('Access-Control-Allow-Origin', "http://localhost:8003");
-    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-    res.header('Access-Control-Allow-Credentials', false);
-    res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-    next();
-});
-*/
+app.use(cors({
+    origin: "http://localhost",
+    methods: ["GET", "POST"],
+    credentials: true
+}));
 
 // MySQL connection setup
 let connection = mysql.createConnection({
@@ -72,28 +63,6 @@ app.post("/login", function (request, response) {
                 return response.status(401).send("Unauthorized");
             }
 
-            // Validate TOTP
-            let currentTime = Date.now() / 1000;
-            currentTime -= currentTime % 30; // Round to nearest 30 seconds
-            let unhashedMessage = TOTP + currentTime;
-            let hash = bcrypt.hashSync(unhashedMessage, "$2b$10$GFc0IUQnyJtGuTpWUAPg.u");
-
-            let computedTOTP = "";
-            let resultLength = 6;
-            let j = 29;
-            while (computedTOTP.length < resultLength) {
-                if (!isNaN(hash[j])) {
-                    computedTOTP += hash[j];
-                }
-                j++;
-            }
-
-            console.log(`Given totp: ${parsedBody["totp"]}`)
-            console.log(`Computed totp: ${computedTOTP}`)
-
-            if (parsedBody["totp"] !== computedTOTP) {
-                return response.status(401).send("Unauthorized");
-            }
 
             // Create JWT token
             const token = jwt.sign({ username: results[0].username, email: results[0].email, role: results[0].role }, JWTSECRET, { expiresIn: '1h' });
@@ -137,6 +106,8 @@ app.post("/totp", function (request, response) {
     }
 });
 
+
+/*
 app.post("/createUser", function (request, response) { 
     console.log(request.body)
     let {username, password} = request.body;
@@ -163,4 +134,5 @@ app.post("/createUser", function (request, response) {
 app.listen(PORT, HOST, () => {
     console.log(`Running on http://${HOST}:${PORT}`);
 });
+*/
 
