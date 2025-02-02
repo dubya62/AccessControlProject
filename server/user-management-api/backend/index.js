@@ -1,3 +1,5 @@
+require("dotenv").config();
+
 const express = require("express");
 const mysql = require("mysql2");
 const bcrypt = require("bcrypt");
@@ -19,10 +21,13 @@ const app = express();
 app.use(express.json());
 
 app.use(cors({
-    origin: "http://localhost",
-    methods: ["GET", "POST"],
+    origin: "http://localhost:8003",
+    methods: ["GET, POST, PUT, DELETE, OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true
 }));
+
+app.options("*", cors());
 
 // MySQL connection setup
 let connection = mysql.createConnection({
@@ -98,11 +103,13 @@ app.post("/totp", function (request, response) {
         }
         j++;
     }
-
+    console.log("Generated TOTP:", result);
+    console.log("Received TOTP:", parsedBody["totp"]);
+    console.log("Match Status:", result === parsedBody["totp"])
     if (result === parsedBody["totp"]) {
-        return response.status(200).send("Success");
+        return response.status(200).json({ success: true, message: "TOTP Validated" });
     } else {
-        return response.status(401).send("Unauthorized");
+        return response.status(401).json({ success: false, message: "Unauthorized" });
     }
 });
 
@@ -130,9 +137,9 @@ app.post("/createUser", function (request, response) {
     });
 });
 
-
-app.listen(PORT, HOST, () => {
-    console.log(`Running on http://${HOST}:${PORT}`);
-});
 */
+// app.listen(PORT, HOST, () => {
+//     console.log(`Running on http://${HOST}:${PORT}`);
+// });
+app.listen(PORT, () => console.log(`User-Management API running on port ${PORT}`));
 

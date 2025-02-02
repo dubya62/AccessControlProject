@@ -2,6 +2,7 @@ const express = require("express");
 const mysql = require("mysql2");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const cors = require("cors")
 
 const TOTP = String(process.env.TOTP);
 const PORT = String(process.env.PORT);
@@ -25,6 +26,12 @@ let connection = mysql.createConnection({
 
 // Serve static files
 app.use("/", express.static("frontend"));
+
+app.use(cors({ 
+  origin: "http://localhost:8003",
+  methods: "GET, POST, PUT, DELETE",
+  credentials: true
+}));
 
 // Middleware to authenticate token
 function authenticateToken(request, response, next) {
@@ -105,7 +112,6 @@ app.get("/queryReviews", (request, response) => {
   });
 
 });
-
 
 app.listen(PORT, HOST, () => {
   console.log(`Running on http://${HOST}:${PORT}`);
