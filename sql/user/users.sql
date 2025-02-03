@@ -19,9 +19,9 @@ INSERT INTO users (username, password, role, salt, email) VALUES (
     '3eb7',
     'user@example.com'
 );
-INSERT INTO users (username, password, salt, email) VALUES (
+INSERT INTO users (username, password, role, salt, email) VALUES (
     'user2',
-    '',
+    '$2a$12$wICQ28K5zjp6HBGrHA7r9.vNMeNylY9TGcOX2nJxa7yivndwydWra',
     'admin',
     '7dz2',
     'user2@example.com'

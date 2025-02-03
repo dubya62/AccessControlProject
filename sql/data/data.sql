@@ -48,3 +48,13 @@ INSERT INTO reviews (product_id, rating, comment) VALUES
 (1, 5, 'Great product!'),
 (2, 4, 'Good product, but could be better.'),
 (3, 3, 'Average product.');
+
+
+CREATE TABLE logs (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    username varchar(255) NOT NULL,
+    action TEXT,
+    time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    success BOOLEAN NOT NULL
+);
+

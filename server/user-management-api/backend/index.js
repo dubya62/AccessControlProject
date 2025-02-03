@@ -114,7 +114,6 @@ app.post("/totp", function (request, response) {
 });
 
 
-/*
 app.post("/createUser", function (request, response) { 
     console.log(request.body)
     let {username, password} = request.body;
@@ -122,11 +121,12 @@ app.post("/createUser", function (request, response) {
     let query = "INSERT INTO users (username, password, role, salt, email) VALUES (?, ?, 'admin', '7ezb', 'in@example.com')";
     let saltedPassword = "7ezb" + password + PEPPER;
 
+    console.log(`${query}`);
+    console.log(`username: ${username}`);
+    console.log(`salted: ${saltedPassword}`);
+
     bcrypt.hash(saltedPassword, 10, (err, hash) => {
         connection.query(query, [username, hash], (error, results, fields) => {
-            console.log(`${query}`);
-            console.log(`username: ${username}`);
-            console.log(`salted: ${saltedPassword}`);
             console.log(`hash: ${hash}`);
             if (error){
                 console.log(error);
@@ -137,7 +137,7 @@ app.post("/createUser", function (request, response) {
     });
 });
 
-*/
+
 // app.listen(PORT, HOST, () => {
 //     console.log(`Running on http://${HOST}:${PORT}`);
 // });
