@@ -141,5 +141,5 @@ app.post("/createUser", function (request, response) {
 // app.listen(PORT, HOST, () => {
 //     console.log(`Running on http://${HOST}:${PORT}`);
 // });
-app.listen(PORT, () => console.log(`User-Management API running on port ${PORT}`));
+app.listen(PORT, () => console.log(`User-Management API running on port http://${HOST}:${PORT}`));
 

@@ -12,7 +12,7 @@ function getCookie(name) {
     return null;
 }
 
-function query() {
+function query(endpoint) {
     // Retrieve the JWT token from cookies
     let token = getCookie('jwtToken');
 
@@ -23,17 +23,22 @@ function query() {
         return;
     }
 
-    fetch("http://" + parsedUrl.host + "/query", {
+    fetch("http://" + parsedUrl.host + "/" + endpoint, {
         method: "GET",
         headers: {
-            "Authorization": token,
-        },
+            "Accept": "application/json",
+            "Authorization": 'Bearer ${token}'
+        }
     })
     .then((resp) => {
-        console.log(resp);
+        console.log('Response from ${endpoint}:', resp);
+        if (!resp.ok) {
+            return resp.text().then(text => { throw new Error('Error ${resp.status}: ${text}'); });
+        }
         return resp.json()
     })
     .then((data) => {
+        console.log('Query Results from ${endpoint};', data)
         console.log(`HERE 1`);
         console.log(`data: ${data}`)
         document.getElementById("response").innerHTML = JSON.stringify(data, null, 2);
@@ -127,6 +132,8 @@ function totp() {
             alert("Incorrect TOTP");
 
         } else if (_resp.status == 200) {
+            location.href = "http://" + parsedUrl.host + "/query.html";
+        } else if (_resp.status == 204) {
             location.href = "http://" + parsedUrl.host + "/query.html";
         } else {
             console.log("Unknown Response Status: " + _resp.status);

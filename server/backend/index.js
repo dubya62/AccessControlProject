@@ -81,11 +81,12 @@ app.get("/queryOrders", (request, response) => {
           console.error(error.message);
           response.status(500).send("Database error");
         } else {
-          if (token["role"] == "admin"){
+            response.send(result)
+          /* if (token["role"] == "admin"){
             response.send(results);
           } else {
             response.status(403).send("Forbidden");
-          }
+          } */
         }
       });
   });
@@ -102,11 +103,12 @@ app.get("/queryReviews", (request, response) => {
           console.error(error.message);
           response.status(500).send("Database error");
         } else {
-          if (token["role"] == "admin"){
+            response.send(result)
+          /*if (token["role"] == "admin"){
             response.send(results);
           } else {
             response.status(403).send("Forbidden");
-          }
+          } */
         }
       });
   });

@@ -19,7 +19,7 @@ INSERT INTO users (username, password, role, salt, email) VALUES (
     '3eb7',
     'user@example.com'
 );
-INSERT INTO users (username, password, salt, email) VALUES (
+INSERT INTO users (username, password, role, salt, email) VALUES (
     'user2',
     '',
     'admin',
