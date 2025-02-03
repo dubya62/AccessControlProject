@@ -12,7 +12,7 @@ function getCookie(name) {
     return null;
 }
 
-function query() {
+function query(table) {
     // Retrieve the JWT token from cookies
     let token = getCookie('jwtToken');
 
@@ -23,20 +23,24 @@ function query() {
         return;
     }
 
-    fetch("http://" + parsedUrl.host + "/query", {
+    fetch("http://" + parsedUrl.host + `/query${table}`, {
         method: "GET",
         headers: {
-            "Authorization": token,
+            Authorization: "Bearer " + token,
         },
     })
     .then((resp) => {
         console.log(resp);
-        return resp.json()
+        if (resp.status == 200){
+            console.log("good");
+            return resp.text();
+        } else if (resp.status == 403){
+            return "You are not allowed to see this data.";
+        }
     })
     .then((data) => {
-        console.log(`HERE 1`);
-        console.log(`data: ${data}`)
-        document.getElementById("response").innerHTML = JSON.stringify(data, null, 2);
+        console.log(`data: ${data}`);
+        document.getElementById("response").innerHTML = data;
     })
     .catch((err) => {
         console.log(err);
@@ -113,7 +117,7 @@ function totp() {
         headers: {
             "Accept": "application/json",
             "Content-Type": "application/json",
-            "Authorization": "Bearer " + token  // Add JWT token in the Authorization header
+            Authorization: "Bearer " + token  // Add JWT token in the Authorization header
         },
         body: stringifiedBody
     })
@@ -138,4 +142,45 @@ function totp() {
         alert("An error occurred. Please try again.");
     });
 }
+
+
+function getLogs(){
+    // Retrieve the JWT token from cookies
+    let token = getCookie('jwtToken');
+
+    console.log(`token: ${token}`);
+
+    if (!token) {
+        alert('You are not logged in. Please log in first.');
+        return;
+    }
+
+    fetch("http://" + parsedUrl.host + `/getLogs`, {
+        method: "GET",
+        headers: {
+            Authorization: "Bearer " + token,
+        },
+    })
+    .then((resp) => {
+        console.log(resp);
+        if (resp.status == 200){
+            console.log("good");
+            return resp.text();
+        } else if (resp.status == 403){
+            return "You are not allowed to see this data.";
+        }
+    })
+    .then((data) => {
+        console.log(`data: ${data}`);
+        document.getElementById("response").innerHTML = data;
+    })
+    .catch((err) => {
+        console.log(err);
+    });
+}
+
+
+
+
+
 
