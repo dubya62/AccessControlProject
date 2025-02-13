@@ -14,9 +14,10 @@ CREATE TABLE products (
 
 -- Insert sample data into the products table
 INSERT INTO products (name, description, price) VALUES
-('Product 1', 'Description for product 1', 19.99),
-('Product 2', 'Description for product 2', 29.99),
-('Product 3', 'Description for product 3', 39.99);
+('Honey Farms Honey', 'Yogi Bear is scary', 19.99),
+('Ray Liotta Honey', 'Could potentially put you into a rage', 29.99),
+('Benson Family Honey', 'I remember when I scared Vanessa, but what did I say when I was practicing it?', 123.00),
+('Vanessa Bloome Top !!!!10!!!! Honey', 'beemovie.txt', 19.99);
 
 
 CREATE TABLE orders (
@@ -32,10 +33,11 @@ CREATE TABLE orders (
 INSERT INTO orders (product_id, quantity, total) VALUES
 (1, 2, 39.98),
 (2, 1, 29.99),
-(3, 3, 119.97);
+(3, 10, 119.97);
 
 CREATE TABLE reviews (
     id INT AUTO_INCREMENT PRIMARY KEY,
+    reviewer VARCHAR(255) NOT NULL,
     product_id INT NOT NULL,
     rating INT NOT NULL,
     comment TEXT,
@@ -44,10 +46,11 @@ CREATE TABLE reviews (
 );
 
 -- Insert sample data into the reviews table
-INSERT INTO reviews (product_id, rating, comment) VALUES
-(1, 5, 'Great product!'),
-(2, 4, 'Good product, but could be better.'),
-(3, 3, 'Average product.');
+INSERT INTO reviews (product_id, reviewer, rating, comment) VALUES
+(1, 'Adam Flayman', 5, 'This honey was gotten by bad people who hurt bees!'),
+(2, 'Barry B. Benson', 4, 'Ray Liotta tried to kill me!'),
+(3, 'Martin Benson', 19, 'The rating I gave this product is super important!'),
+(4, 'Vanessa Bloome', 5, 'I like remember when Barry scared me at my apartment... What did he say?');
 
 
 CREATE TABLE logs (
