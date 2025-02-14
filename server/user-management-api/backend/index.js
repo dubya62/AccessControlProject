@@ -115,7 +115,7 @@ app.post("/totp", function (request, response) {
 });
 
 
-app.post("/createUser", function (request, response) { 
+/*app.post("/createUser", function (request, response) { 
     console.log(request.body)
     let {username, password} = request.body;
 
@@ -136,8 +136,54 @@ app.post("/createUser", function (request, response) {
             return response.status(200).send("success?");
         });
     });
-});
+}); */
 
+// function to register a new user
+ app.post("/register", function (request, response) { 
+    console.log(request.body);
+
+    // grab username and password
+    let {username, password, email} = request.body;
+
+    // if the information is missing, fail
+    if (!username || !password || !email) {
+        return response.status(400).send("Missing required fields.");
+    }
+
+    // check if username already exists
+    connection.query("SELECT * FROM users WHERE username = ?", [username], (err, results) => {
+        if (err) {
+            console.error("Database error:", err);
+            return response.status(500).send("Database error.");
+        }
+        if (results.length > 0) {
+            return response.status(409).send("Username already taken.");
+        }
+
+        // generate salt and hash the password
+        let salt = bcrypt.genSaltSync(10);
+        let saltedPassword = salt + password + PEPPER;
+
+        bcrypt.hash(saltedPassword, 10, (err, hash) => {
+            if (err){
+                console.error("Hashing error:", err);
+                return response.status(500).send("Password error.");
+            }
+
+            // insert new user into the database
+            let query = "INSERT INTO users (username, password, role, salt, email) VALUES (?, ?, 'user', ?, ?)";
+            connection.query(query, [username, hash, role, salt, email], (error, results) => {
+                if (error) {
+                    console.error("Database error:", error);
+                    return response.status(500).send("Registration failed.");
+                }
+
+                console.log(`User ${username} registered successfully.`);
+                return response.status(201).send("Registration successful.");
+            });
+        });
+    });
+});
 
 // app.listen(PORT, HOST, () => {
 //     console.log(`Running on http://${HOST}:${PORT}`);

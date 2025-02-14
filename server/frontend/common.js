@@ -179,6 +179,52 @@ function getLogs(){
     });
 }
 
+function register() {
+    let stringifiedBody = JSON.stringify({
+        username: document.getElementById("username").value,
+        password: document.getElementById("password").value,
+        email: document.getElementById("email").value,
+    });
+
+    console.log(stringifiedBody);
+
+    console.log(`http://${parsedUrl.hostname}:8004/register`);
+    fetch("http://" + parsedUrl.hostname + ":8004/register", {
+        method: "POST",
+        mode: "cors",
+        headers: {
+            "Accept": "application/json",
+            "Content-Type": "application/json"
+        },
+        body: stringifiedBody
+    })
+    .then((_resp) => {
+        if (_resp.status == 500) {
+            console.log("Server Error");
+            alert("Server Error");
+        } else if (_resp.status == 409) {
+            console.log("Account already exists");
+            alert("This account already exists.");
+        } else if (_resp.status == 400) {
+            console.log("Incomplete Request");
+            alert("Incomplete Request"); 
+        } else if (_resp.status == 201) {
+            return _resp.json().then(data => {
+                console.log("Registration Success:", data);
+                alert("Registration successful.");
+                window.location.href = "/index.html";
+            });
+        } else {
+            console.log("Unknown Response Status: " + _resp.status);
+            alert("Unknown response from server.");
+        }
+    })
+    .catch((err) => {
+        console.log(err);
+        alert("An error occurred. Please try again.");
+    });
+}
+
 
 
 
