@@ -65,8 +65,17 @@ input:focus {
 
 .footer {
     margin-top: 1em;
+}
+
+.footer a {
+    text-decoration: none;
     font-size: 0.9em;
+    cursor: pointer;
     color: #333;
+}
+
+.footer a:hover {
+    text-decoration: underline;
 }
   
 /* .content{
