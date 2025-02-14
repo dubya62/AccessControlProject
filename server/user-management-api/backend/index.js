@@ -139,7 +139,7 @@ app.post("/totp", function (request, response) {
 }); */
 
 // function to register a new user
- app.post("/register", function (request, response) { 
+/*app.post("/register", function (request, response) { 
     console.log(request.body);
 
     // grab username and password
@@ -172,9 +172,12 @@ app.post("/totp", function (request, response) {
 
             // insert new user into the database
             let query = "INSERT INTO users (username, password, role, salt, email) VALUES (?, ?, 'user', ?, ?)";
-            connection.query(query, [username, hash, role, salt, email], (error, results) => {
+            connection.query(query, [username, hash, salt, email], (error, results) => {
                 if (error) {
                     console.error("Database error:", error);
+                    if (error.code == 'ER_DUP_ENTRY') {
+                    	return response.status(409).send("Username already taken.");
+                    }
                     return response.status(500).send("Registration failed.");
                 }
 
@@ -183,7 +186,58 @@ app.post("/totp", function (request, response) {
             });
         });
     });
+});*/
+
+// this one works 
+app.post("/register", function (request, response) { 
+    console.log(request.body);
+
+    // Grab username, password, and email
+    let { username, password, email } = request.body;
+
+    // If the information is missing, fail
+    if (!username || !password || !email) {
+        return response.status(400).send(JSON.stringify({ error: "Missing required fields." }));
+    }
+
+    // Check if username already exists
+    connection.query("SELECT * FROM users WHERE username = ?", [username], (err, results) => {
+        if (err) {
+            console.error("Database error:", err);
+            return response.status(500).send(JSON.stringify({ error: "Database error." }));
+        }
+        if (results.length > 0) {
+            return response.status(409).send(JSON.stringify({ error: "Username already taken." }));
+        }
+
+        // Generate salt and hash the password
+        let salt = bcrypt.genSaltSync(10);
+        let saltedPassword = salt + password + PEPPER;
+
+        bcrypt.hash(saltedPassword, 10, (err, hash) => {
+            if (err) {
+                console.error("Hashing error:", err);
+                return response.status(500).send(JSON.stringify({ error: "Password error." }));
+            }
+
+            // Insert new user into the database
+            let query = "INSERT INTO users (username, password, role, salt, email) VALUES (?, ?, 'user', ?, ?)";
+            connection.query(query, [username, hash, salt, email], (error, results) => {
+                if (error) {
+                    console.error("Database error:", error);
+                    if (error.code == 'ER_DUP_ENTRY') {
+                        return response.status(409).send(JSON.stringify({ error: "Username already taken." }));
+                    }
+                    return response.status(500).send(JSON.stringify({ error: "Registration failed." }));
+                }
+
+                console.log(`User ${username} registered successfully.`);
+                return response.status(201).send(JSON.stringify({ message: "Registration successful." }));
+            });
+        });
+    });
 });
+
 
 // app.listen(PORT, HOST, () => {
 //     console.log(`Running on http://${HOST}:${PORT}`);

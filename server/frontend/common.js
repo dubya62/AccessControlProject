@@ -197,7 +197,7 @@ function register() {
             "Content-Type": "application/json"
         },
         body: stringifiedBody
-    })
+    }) 
     .then((_resp) => {
         if (_resp.status == 500) {
             console.log("Server Error");
@@ -219,10 +219,10 @@ function register() {
             alert("Unknown response from server.");
         }
     })
-    .catch((err) => {
+    /*.catch((err) => {
         console.log(err);
         alert("An error occurred. Please try again.");
-    });
+    });*/
 }
 
 
