@@ -47,10 +47,9 @@ CREATE TABLE reviews (
 
 -- Insert sample data into the reviews table
 INSERT INTO reviews (product_id, reviewer, rating, comment) VALUES
-(1, 'Adam Flayman', 5, 'This honey was gotten by bad people who hurt bees!'),
-(2, 'Barry B. Benson', 4, 'Ray Liotta tried to kill me!'),
-(3, 'Martin Benson', 19, 'The rating I gave this product is super important!'),
-(4, 'Vanessa Bloome', 5, 'I like remember when Barry scared me at my apartment... What did he say?');
+(1, 'Adam Flayman', 123, 'This honey was gotten by bad people who hurt seven bees!'),
+(2, 'Barry B. Benson', 29, 'Ray Liotta tried to kill me like five times!'),
+(3, 'Vanessa Bloome', 1019, 'I like remember when Barry scared me at my three floor apartment... What did he say?');
 
 
 CREATE TABLE logs (
