@@ -82,37 +82,88 @@ function isNumeric(character) {
     return !isNaN(character);
 }
 
-
+// THE ORIGINAL IMPLMENTATION 
 // /totp route to validate TOTP (unchanged)
+// app.post("/totp", function (request, response) {
+//     let parsedBody = request.body;
+//     if (!parsedBody.hasOwnProperty("totp")) {
+//         return response.status(415).send("Incomplete Request");
+//     }
+
+//     let currentTime = Date.now() / 1000;
+//     currentTime -= currentTime % 30; // Round to nearest 30 seconds
+//     let unhashedMessage = TOTP + currentTime;
+//     let hash = bcrypt.hashSync(unhashedMessage, "$2b$10$GFc0IUQnyJtGuTpWUAPg.u");
+
+//     let result = "";
+//     let resultLength = 6;
+//     let j = 29;
+//     while (result.length < resultLength) {
+//         if (isNumeric(hash[j])) {
+//             result += hash[j];
+//         }
+//         j++;
+//     }
+//     console.log("Generated TOTP:", result);
+//     console.log("Received TOTP:", parsedBody["totp"]);
+//     console.log("Match Status:", result === parsedBody["totp"])
+//     if (result === parsedBody["totp"]) {
+//         return response.status(200).json({ success: true, message: "TOTP Validated" });
+//     } else {
+//         return response.status(401).json({ success: false, message: "Unauthorized" });
+//     }
+// });
+
+// This one works 
 app.post("/totp", function (request, response) {
     let parsedBody = request.body;
+
+    // Check if the TOTP code was provided
     if (!parsedBody.hasOwnProperty("totp")) {
         return response.status(415).send("Incomplete Request");
     }
 
-    let currentTime = Date.now() / 1000;
-    currentTime -= currentTime % 30; // Round to nearest 30 seconds
-    let unhashedMessage = TOTP + currentTime;
-    let hash = bcrypt.hashSync(unhashedMessage, "$2b$10$GFc0IUQnyJtGuTpWUAPg.u");
+    // Get the current time and round it to the nearest 30 seconds
+    let currentTime = Math.floor(Date.now() / 1000);  // Current timestamp in seconds
+    currentTime -= currentTime % 30;  // Round to nearest 30 seconds
+    
+    // Generate the message (TOTP secret + current time)
+    let unhashedMessage = TOTP + currentTime;  // TOTP secret + timestamp
+    console.log("Unhashed Message:", unhashedMessage);
 
+    // Hash the message using bcrypt 
+    let hash = bcrypt.hashSync(unhashedMessage, "$2b$10$GFc0IUQnyJtGuTpWUAPg.u");
+    console.log("Generated Hash:", hash);
+
+    // Extract the first 6 numeric digits from the hash
     let result = "";
     let resultLength = 6;
     let j = 29;
-    while (result.length < resultLength) {
+
+    // Loop to find the first 6 numeric digits
+    while (result.length < resultLength && j < hash.length) {
         if (isNumeric(hash[j])) {
             result += hash[j];
         }
         j++;
     }
-    console.log("Generated TOTP:", result);
-    console.log("Received TOTP:", parsedBody["totp"]);
-    console.log("Match Status:", result === parsedBody["totp"])
+
+    // Pad with zeros if less than 6 digits are found
+    while (result.length < resultLength) {
+        result += "0";  // Padding if needed
+    }
+
+    console.log("Generated TOTP:", result);  // Display the generated TOTP
+
+    // Compare the received TOTP with the generated one
     if (result === parsedBody["totp"]) {
         return response.status(200).json({ success: true, message: "TOTP Validated" });
     } else {
         return response.status(401).json({ success: false, message: "Unauthorized" });
     }
 });
+
+
 
 
 /*app.post("/createUser", function (request, response) { 

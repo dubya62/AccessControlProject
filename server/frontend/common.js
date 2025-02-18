@@ -132,7 +132,11 @@ function totp() {
 
         } else if (_resp.status == 200) {
             location.href = "http://" + parsedUrl.host + "/query.html";
-        } else {
+        } 
+          else if (_resp.status == 204) {
+            location.href = "http://" + parsedUrl.host + "/query.html";
+        }
+        else {
             console.log("Unknown Response Status: " + _resp.status);
             alert("Unknown response from server.");
         }
@@ -142,6 +146,50 @@ function totp() {
         alert("An error occurred. Please try again.");
     });
 }
+
+// function totp() {
+//     let stringifiedBody = JSON.stringify({
+//         totp: document.getElementById("totp").value
+//     });
+
+//     let token = getCookie('jwtToken'); // Retrieve stored JWT token
+
+//     if (!token) {
+//         alert('You are not logged in. Please log in first.');
+//         return;
+//     }
+
+//     let totpValue = document.getElementById("totp").value;
+//     console.log("TOTP Entered by User:", totpValue);
+
+//     fetch("http://" + parsedUrl.hostname + ":8004/totp", {
+//         method: "POST",
+//         headers: {
+//             "Accept": "application/json",
+//             "Content-Type": "application/json",
+//             Authorization: "Bearer " + token // ✅ Ensure token is sent correctly
+//         },
+//         body: JSON.stringify({ totp: totpValue }) // ✅ Send TOTP in JSON format
+//     })
+//     .then(response => {
+//         console.log("TOTP API Response Status:", response.status);
+//         return response.json(); // Convert response to JSON
+//     })
+//     .then(data => {
+//         console.log("TOTP Validation Response:", data);
+//         if (data.success) {
+//             console.log("✅ TOTP Verified! Redirecting...");
+//             window.location.href = "/query.html"; // ✅ Redirect to query page
+//         } else {
+//             alert("Invalid TOTP token. Please try again.");
+//         }
+//     })
+//     .catch(error => {
+//         console.error("🚨 Error verifying TOTP:", error);
+//         alert("An error occurred. Please try again.");
+//     });
+// }
+
 
 
 function getLogs(){

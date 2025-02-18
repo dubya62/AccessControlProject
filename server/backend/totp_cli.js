@@ -51,6 +51,9 @@ function get_totp(){
 
     // compare the computed result to the given result
     console.log("Computed: " + result);
+    return result;
 }
 
-get_totp()
+console.log("TOTP:", get_totp())
+
+
