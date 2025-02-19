@@ -4,14 +4,18 @@ body {
     align-items: center;
     height: 100vh;
     margin: 0;
-    background-color: lightblue;
+    background-image: url('bbb.jpg'); 
+    background-size: cover; 
+    background-position: center; 
+    background-repeat: no-repeat;
     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    background-color: #F5C518; 
 }
 
 .form-container {
-    background-color: #fff;
+    background-color: #3E2723;
     border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
     padding: 2em;
     width: 100%;
     max-width: 400px;
@@ -19,7 +23,7 @@ body {
 }
 
 h2 {
-    color: #1e90ff;
+    color: #FFC107;
     margin-bottom: 1em;
 }
 
@@ -27,7 +31,7 @@ label {
     display: block;
     margin: 0.5em 0 0.2em;
     font-size: 1em;
-    color: #333;
+    color: #FFEB3B; 
     text-align: left;
 }
 
@@ -35,21 +39,23 @@ input {
     width: 100%;
     padding: 0.8em;
     margin-bottom: 1em;
-    border: 1px solid #ccc;
+    border: 1px solid #FFC107;
     border-radius: 5px;
     font-size: 1em;
     box-sizing: border-box;
+    background-color: #5D4037; 
+    color: #FFEB3B;
 }
 
 input:focus {
-    border-color: #1e90ff;
+    border-color: #FFC107;
     outline: none;
-    box-shadow: 0 0 5px rgba(30, 144, 255, 0.5);
+    box-shadow: 0 0 5px rgba(255, 193, 7, 0.5);
 }
 
 .button {
-    background-color: #1e90ff;
-    color: white;
+    background-color: #212121; 
+    color: #FFC107; 
     padding: 0.8em;
     width: 100%;
     font-size: 1em;
@@ -60,7 +66,8 @@ input:focus {
 }
 
 .button:hover {
-    background-color: #4682b4;
+    background-color: #FFEB3B; 
+    color: #3E2723; 
 }
 
 .footer {
@@ -71,32 +78,10 @@ input:focus {
     text-decoration: none;
     font-size: 0.9em;
     cursor: pointer;
-    color: #333;
+    color: #FFC107;
 }
 
 .footer a:hover {
     text-decoration: underline;
 }
-  
-/* .content{
-    position:absolute;
-    top:50%;
-    left:50%;
-    width :400px;
-    height:400px;
-    margin-left:-100px;
-    margin-top:-100px;
-    font-size: 40px;
-    
 
-}
-.button {
-    background-color: black;
-    border: none;
-    color: whitesmoke;
-    padding: 10px 20px;
-    text-decoration: none;
-    font-size: 40px;
-    margin-left: 40%;
-    cursor: pointer;
-} */

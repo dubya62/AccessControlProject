@@ -9,6 +9,24 @@
             Access Control Project
         </title>
     </head>
+    <style>
+        .transparent-button {
+        position: absolute; 
+        top: 200px;  
+        right: 600px; 
+        padding: 10px 20px;
+        background: transparent; 
+        border: transparent;
+        color: #FFC107;
+        font-size: 1.2em;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+    .transparent-button:hover {
+        background: rgba(255, 193, 7, 0.2); 
+    }
+    </style>
 
     <body>
         <div class="form-container">
@@ -17,7 +35,7 @@
             <button class="button" onclick="query('Orders')">Query Orders</button>
             <button class="button" onclick="query('Reviews')">Query Reviews</button>
             <button class="button" onclick="window.location.href='logs.html'">Logs</button>
-            <button class="button" onclick="window.location.href='beemovie.txt'">SUPER SECRET BUTTON</button> 
+            <button class="transparent-button" onclick="window.location.href='beemovie.txt'"></button> 
             <textarea id="response" rows="10" placeholder="Data Will Appear Here"></textarea>
             <div class="footer">Access Control Project</div>
         </div>
